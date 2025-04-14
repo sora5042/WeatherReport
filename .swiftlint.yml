@@ -1,0 +1,64 @@
+disabled_rules:
+  - force_cast
+  - force_try
+  - for_where
+  - function_parameter_count
+  - large_tuple
+  - multiple_closures_with_trailing_closure
+  - nesting
+  - unused_closure_parameter
+  - shorthand_operator
+  - superfluous_disable_command
+  - switch_case_alignment
+opt_in_rules:
+  - closure_spacing
+  - conditional_returns_on_newline
+  - literal_expression_end_indentation
+  - operator_usage_whitespace
+  - sorted_imports
+  - empty_count
+  - no_extension_access_modifier
+  - multiline_arguments
+  - multiline_function_chains
+  - multiline_literal_brackets
+  - multiline_parameters
+  - multiline_parameters_brackets
+  - vertical_whitespace_opening_braces
+  - vertical_whitespace_closing_braces
+included:
+  - WeatherReport/Sources
+  - WeatherReportTests/Sources
+analyzer_rules:
+  - explicit_self
+  - unused_declaration
+conditional_returns_on_newline:
+  if_only: true
+cyclomatic_complexity:
+  - 20
+file_length:
+  - 1200 # warning
+  - 1500 # error
+function_body_length:
+  - 120 # warning
+  - 150 # error
+line_length:
+  - 320 # warning
+  - 350 # error
+identifier_name:
+  min_length: 1
+  max_length: 60
+  allowed_symbols: [_]
+no_extension_access_modifier:
+  severity: warning
+empty_count:
+  severity: warning
+type_body_length:
+  - 500 # warning
+  - 600 # error
+type_name:
+  min_length: 1
+  max_length: 50
+generic_type_name:
+  min_length: 1
+  max_length: 50
+reporter: "xcode"
