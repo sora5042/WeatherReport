@@ -1,0 +1,3 @@
+--disable andOperator,extensionAccessControl,hoistPatternLet,redundantVoidReturnType,strongOutlets,trailingCommas,unusedArguments
+--ifdef no-indent
+--ranges no-space
