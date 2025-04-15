@@ -22,12 +22,14 @@ public struct ForecastAPI: APIEndpoint {
 
 public extension ForecastAPI {
     struct GetParam: Encodable {
-        public init(lat: Double? = nil, lon: Double? = nil, q: City) {
+        public init(appid: String? = nil, lat: Double? = nil, lon: Double? = nil, q: City) {
+            self.appid = appid
             self.lat = lat
             self.lon = lon
             self.q = q
         }
 
+        public var appid: String?
         public var lat: Double?
         public var lon: Double?
         public var units: String = "metric"

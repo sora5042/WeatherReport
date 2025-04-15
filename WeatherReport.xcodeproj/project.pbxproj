@@ -10,6 +10,7 @@
 		47BE4A892DAD042F0088B094 /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47BE4A7E2DAD042F0088B094 /* API.framework */; };
 		47BE4A932DAD042F0088B094 /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47BE4A7E2DAD042F0088B094 /* API.framework */; };
 		47BE4A952DAD042F0088B094 /* API.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 47BE4A7E2DAD042F0088B094 /* API.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		47BE4AF82DADFC400088B094 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 47BE4AF72DADFC400088B094 /* KeychainAccess */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47BE4AF82DADFC400088B094 /* KeychainAccess in Frameworks */,
 				47BE4A932DAD042F0088B094 /* API.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -198,6 +200,7 @@
 			);
 			name = WeatherReport;
 			packageProductDependencies = (
+				47BE4AF72DADFC400088B094 /* KeychainAccess */,
 			);
 			productName = WeatherReport;
 			productReference = 47BE4A062DACD7620088B094 /* WeatherReport.app */;
@@ -335,6 +338,9 @@
 			);
 			mainGroup = 47BE49FD2DACD7620088B094;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				47BE4AF62DADFC400088B094 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 47BE4A072DACD7620088B094 /* Products */;
 			projectDirPath = "";
@@ -889,6 +895,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		47BE4AF62DADFC400088B094 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				kind = exactVersion;
+				version = 4.2.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		47BE4AF72DADFC400088B094 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 47BE4AF62DADFC400088B094 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 47BE49FE2DACD7620088B094 /* Project object */;
 }
