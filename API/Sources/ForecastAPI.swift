@@ -33,7 +33,7 @@ public extension ForecastAPI {
         public var lat: Double?
         public var lon: Double?
         public var units: String = "metric"
-        public var lang: String = "jp"
+        public var lang: String = "ja"
         public var q: City?
     }
 }

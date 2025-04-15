@@ -9,21 +9,21 @@ import API
 import Foundation
 
 protocol ForecastService {
-    func fetchForecast(for city: Forecast.City) async throws -> [Forecast]
+    func fetchForecast(for city: Forecast.City) async throws -> Forecast
 }
 
 struct DefaultForecastService: ForecastService {
     var forecastAPI: ForecastAPI = .init(apiClient: .init())
     private let dataStore: SecuredDataStore = SharedData.shared
 
-    func fetchForecast(for city: Forecast.City) async throws -> [Forecast] {
+    func fetchForecast(for city: Forecast.City) async throws -> Forecast {
         switch city {
         case let .current(latitude, longitude):
             let response = try await forecastAPI.get(.init(appid: dataStore.apiKey, lat: latitude, lon: longitude))
-            return [.init(forecast: response)]
+            return .init(forecast: response)
         default:
             let response = try await forecastAPI.get(.init(appid: dataStore.apiKey, q: .init(rawValue: city.name ?? "")))
-            return [.init(forecast: response)]
+            return .init(forecast: response)
         }
     }
 }
@@ -66,7 +66,7 @@ extension Forecast.Weather {
             maxTemperature: list.main.temp_max,
             minTemperature: list.main.temp_min,
             humidity: list.main.humidity,
-            weather: list.weather.first?.description ?? "",
+            description: list.weather.first?.description ?? "",
             weatherIcon: list.weather.first?.icon ?? "",
             windSpeed: list.wind.speed,
             windDeg: list.wind.deg,

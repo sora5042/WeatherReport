@@ -14,7 +14,7 @@ struct Forecast: Hashable {
         var maxTemperature: Double
         var minTemperature: Double
         var humidity: Int
-        var weather: String
+        var description: String
         var weatherIcon: String
         var windSpeed: Double
         var windDeg: Int
