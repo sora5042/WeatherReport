@@ -22,7 +22,7 @@ public struct ForecastAPI: APIEndpoint {
 
 public extension ForecastAPI {
     struct GetParam: Encodable {
-        public init(appid: String? = nil, lat: Double? = nil, lon: Double? = nil, q: City) {
+        public init(appid: String? = nil, lat: Double? = nil, lon: Double? = nil, q: City? = nil) {
             self.appid = appid
             self.lat = lat
             self.lon = lon
@@ -34,6 +34,6 @@ public extension ForecastAPI {
         public var lon: Double?
         public var units: String = "metric"
         public var lang: String = "jp"
-        public var q: City
+        public var q: City?
     }
 }

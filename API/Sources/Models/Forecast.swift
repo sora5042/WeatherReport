@@ -8,8 +8,6 @@
 import Foundation
 
 public struct Forecast: Decodable {
-    public var cod: String
-    public var message: String
     public var cnt: Int
     public var list: [List]
     public var city: City
@@ -23,6 +21,7 @@ public extension Forecast {
         public var clouds: Clouds
         public var wind: Wind
         public var visibility: Int
+        public var pop: Double
         public var sys: Sys
         public var dt_txt: String
     }
@@ -40,10 +39,7 @@ public extension Forecast {
         public var id: Int
         public var main: String
         public var description: String
-
-        public var icon: String {
-            "wi wi-\(main.lowercased())-\(description.lowercased().replacingOccurrences(of: " ", with: "-"))"
-        }
+        public var icon: String
     }
 
     struct Clouds: Decodable {
