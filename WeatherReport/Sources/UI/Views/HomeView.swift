@@ -13,7 +13,7 @@ struct HomeView: View {
 
     var body: some View {
         VStack {
-            Text("都市を選択してください")
+            Text("地域を選択してください")
                 .font(.title2)
                 .padding(.bottom, 16)
             CityList { city in
@@ -23,6 +23,9 @@ struct HomeView: View {
         }
         .padding()
         .background(Color(.systemGroupedBackground))
+        .task {
+            await viewModel.fetchCurrentLocation()
+        }
         .navigatorDestination($viewModel.navigation) { navigation in
             switch navigation {
             case let .weatherForecast(city):
