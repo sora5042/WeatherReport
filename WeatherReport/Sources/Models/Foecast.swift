@@ -24,7 +24,7 @@ struct Forecast: Hashable {
 
     var weather: [Weather]
     var city: City?
-    var cityName: String
+    var displayCityName: String
     var lat: Double
     var lon: Double
 

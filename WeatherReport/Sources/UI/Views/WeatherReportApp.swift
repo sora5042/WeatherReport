@@ -5,6 +5,7 @@
 //  Created by Sora Oya on 2025/04/14.
 //
 
+import SwiftData
 import SwiftUI
 
 @main
@@ -19,6 +20,7 @@ struct WeatherReportApp: App {
             }
             .navigationViewStyle(.stack)
             .environmentObject(navigator)
+            .modelContainer(ForecastDataManager.shared.container)
         }
     }
 }

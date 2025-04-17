@@ -15,6 +15,7 @@ protocol ForecastService {
 struct DefaultForecastService: ForecastService {
     var forecastAPI: ForecastAPI = .init(apiClient: .init())
     private let dataStore: SecuredDataStore = SharedData.shared
+    private let dataManager = ForecastDataManager.shared
 
     func fetchForecast(for city: Forecast.City) async throws -> Forecast {
         switch city {
@@ -23,7 +24,11 @@ struct DefaultForecastService: ForecastService {
             return .init(forecast: response)
         default:
             let response = try await forecastAPI.get(.init(appid: dataStore.apiKey, q: .init(rawValue: city.name ?? "")))
-            return .init(forecast: response)
+            let forecast: Forecast = .init(forecast: response)
+            Task {
+                await dataManager.saveForecast(forecast, city: city)
+            }
+            return forecast
         }
     }
 }
@@ -51,7 +56,7 @@ extension Forecast {
     init(forecast: API.Forecast) {
         self.init(
             weather: forecast.list.map { .init(list: $0) },
-            cityName: forecast.city.name,
+            displayCityName: forecast.city.name,
             lat: forecast.city.coord.lat,
             lon: forecast.city.coord.lon
         )
@@ -72,6 +77,67 @@ extension Forecast.Weather {
             windDeg: list.wind.deg,
             pop: list.pop,
             pod: list.sys.pod
+        )
+    }
+}
+
+extension ForecastEntity {
+    convenience init(forecast: Forecast, city: Forecast.City) {
+        let weatherEntities = forecast.weather.map {
+            WeatherEntity(
+                date: $0.date,
+                temperature: $0.temperature,
+                maxTemperature: $0.maxTemperature,
+                minTemperature: $0.minTemperature,
+                humidity: $0.humidity,
+                description: $0.description,
+                iconCode: $0.weatherIcon,
+                windSpeed: $0.windSpeed,
+                windDeg: $0.windDeg,
+                pop: $0.pop,
+                pod: $0.pod
+            )
+        }
+
+        self.init(
+            city: city,
+            displayCityName: forecast.displayCityName,
+            lat: forecast.lat,
+            lon: forecast.lon,
+            weathers: weatherEntities
+        )
+    }
+}
+
+extension Forecast {
+    init(entity: ForecastEntity) {
+        self.init(
+            weather: entity.weathers.map(Weather.init),
+            city: .current(lat: entity.lat, lon: entity.lon),
+            displayCityName: entity.displayCityName,
+            lat: entity.lat,
+            lon: entity.lon
+        )
+    }
+}
+
+extension Forecast.Weather {
+    init(entity: WeatherEntity) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        self.init(
+            date: formatter.string(from: entity.timestamp),
+            temperature: entity.temperature,
+            maxTemperature: entity.maxTemperature,
+            minTemperature: entity.minTemperature,
+            humidity: entity.humidity,
+            description: entity.weatherDescription,
+            weatherIcon: entity.iconCode,
+            windSpeed: entity.windSpeed,
+            windDeg: entity.windDeg,
+            pop: entity.precipitation,
+            pod: entity.pod
         )
     }
 }

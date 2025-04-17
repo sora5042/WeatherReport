@@ -31,6 +31,11 @@ final class WeatherForecastViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
+            if let cachedForecast = ForecastDataManager.shared.fetchCachedForecast(cityName: city.name ?? "") {
+                row = .init(forecast: cachedForecast)
+                isLoading = false
+                return
+            }
             let forecast = try await forecastService.fetchForecast(for: city)
             row = .init(forecast: forecast)
         } catch {
@@ -59,7 +64,7 @@ extension WeatherForecastViewModel {
 extension WeatherForecastViewModel.Row {
     init(forecast: Forecast) {
         self.init(
-            cityName: forecast.cityName,
+            cityName: forecast.displayCityName,
             weather: forecast.weather.map { .init(weather: $0) }
         )
     }
