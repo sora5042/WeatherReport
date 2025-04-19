@@ -33,6 +33,21 @@ struct WeatherForecastView: View {
                 }
             }
         }
+        .alert($viewModel.error) {
+            Task {
+                await viewModel.fetchForecast()
+            }
+        }
+        .alert(
+            "リトライの上限に達しました。",
+            isPresented: $viewModel.alert.retryLimit
+        ) {
+            Button("OK") {
+                dismiss()
+            }
+        } message: {
+            Text("しばらく時間をおいてから再度お試しください")
+        }
         .task {
             await viewModel.fetchForecast()
         }

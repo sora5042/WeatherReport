@@ -18,6 +18,14 @@ final class WeatherForecastViewModel: ObservableObject {
     @Published
     private(set) var row: Row?
 
+    @Published
+    var alert: Alert = .init()
+
+    @Published
+    var error: Error?
+
+    private var maxRetryCount = 3
+
     init(
         city: Forecast.City,
         forecastService: ForecastService = .default
@@ -39,7 +47,12 @@ final class WeatherForecastViewModel: ObservableObject {
             let forecast = try await forecastService.fetchForecast(for: city)
             row = .init(forecast: forecast)
         } catch {
-            print(error)
+            if maxRetryCount > 0 {
+                maxRetryCount -= 1
+                self.error = error
+            } else {
+                alert.retryLimit = true
+            }
         }
     }
 }
@@ -58,6 +71,10 @@ extension WeatherForecastViewModel {
 
         var cityName: String
         var weather: [Weather]
+    }
+
+    struct Alert: Hashable {
+        var retryLimit: Bool = false
     }
 }
 

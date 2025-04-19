@@ -49,7 +49,7 @@ public struct APIClient {
                 switch httpResponse.statusCode {
                 case 200:
                     return data
-                case 400:
+                case 401:
                     throw APIError.unauthorized(data)
                 default:
                     throw APIError.data(data, httpResponse.statusCode)

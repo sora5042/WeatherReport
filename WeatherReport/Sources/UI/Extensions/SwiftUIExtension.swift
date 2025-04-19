@@ -5,6 +5,7 @@
 //  Created by Sora Oya on 2025/04/15.
 //
 
+import API
 import SwiftUI
 
 extension View {
@@ -44,6 +45,51 @@ extension View {
 }
 
 extension View {
+    @MainActor
+    @ViewBuilder
+    func alert(_ error: Binding<Error?>, action: @escaping () -> Void = {}) -> some View {
+        switch error.wrappedValue {
+        case let e as APIError:
+            alert(
+                isPresented: .init(value: error),
+                title: "\(e.localizedDescription)",
+                message: "",
+                action: action
+            )
+        case let e?:
+            alert(
+                isPresented: .init(value: error),
+                title: "\(e.localizedDescription)",
+                message: "",
+                action: action
+            )
+        default:
+            self
+        }
+    }
+}
+
+extension View {
+    func alert(isPresented: Binding<Bool>, title: Text, message: Text, action: @escaping () -> Void = {}) -> some View {
+        alert(
+            title,
+            isPresented: isPresented
+        ) {
+            Button("リトライ") {
+                isPresented.wrappedValue = false
+                action()
+            }
+        } message: {
+            message
+        }
+    }
+
+    func alert(isPresented: Binding<Bool>, title: String, message: String, action: @escaping () -> Void = {}) -> some View {
+        alert(isPresented: isPresented, title: Text(title), message: Text(message), action: action)
+    }
+}
+
+extension View {
     func navigatorDestination<Navigation: Hashable, Destination: View>(
         _ navigation: Binding<Navigation?>,
         @ViewBuilder destination: @escaping (Navigation) -> Destination
@@ -68,5 +114,20 @@ private struct NavigationDestination<Navigation: Hashable>: ViewModifier {
                     navigation = nil
                 }
             }
+    }
+}
+
+extension Binding where Value == Bool {
+    init(value: Binding<(some Any)?>) {
+        self.init(
+            get: {
+                value.wrappedValue != nil
+            },
+            set: {
+                if !$0 {
+                    value.wrappedValue = nil
+                }
+            }
+        )
     }
 }
