@@ -20,7 +20,7 @@ public extension Forecast {
         public var weather: [Description]
         public var clouds: Clouds
         public var wind: Wind
-        public var visibility: Int
+        public var visibility: Int?
         public var pop: Double
         public var sys: Sys
         public var dt_txt: String

@@ -24,19 +24,19 @@ public struct APIClient {
         self.baseURL = baseURL
     }
 
-    public func response<Response: Decodable>(method: HTTPMethod, path: String?, parameters: Parameters?) async throws -> Response {
+    public func response<Response: Decodable>(path: String?, parameters: Parameters?) async throws -> Response {
         do {
-            let data = try await data(method: method, path: path, parameters: parameters)
+            let data = try await data(path: path, parameters: parameters)
             return try decode(data)
         } catch {
             throw error
         }
     }
 
-    private func data(method: HTTPMethod, path: String? = nil, parameters: Parameters? = nil) async throws -> Data {
+    private func data(path: String? = nil, parameters: Parameters? = nil) async throws -> Data {
         let dictionary = try (parameters?.convertToDictionary() ?? [:])
 
-        var request = createRequest(method: method, path: path, parameters: dictionary)
+        var request = createRequest(path: path, parameters: dictionary)
         request.setValue("application/json", forHTTPHeaderField: "accept")
 
         return try await performRequest(request)
@@ -67,22 +67,17 @@ public struct APIClient {
         }
     }
 
-    private func createRequest(method: HTTPMethod, path: String? = nil, parameters: [String: Any]? = nil) -> URLRequest {
+    private func createRequest(path: String? = nil, parameters: [String: Any]? = nil) -> URLRequest {
         let query = URLQueryBuilder(dictionary: parameters ?? [:]).build()
 
         var url = URL(string: baseURL)!
         if let path {
             url = url.appendingPathComponent(path)
         }
-        if method == .get, !query.isEmpty {
-            url = URL(string: url.absoluteString + "?" + query)!
-        }
+        url = URL(string: url.absoluteString + "?" + query)!
 
         var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue.uppercased()
-        if method != .get, !query.isEmpty {
-            request.httpBody = query.data(using: .utf8)
-        }
+        request.httpMethod = "GET"
 
         return request
     }

@@ -16,7 +16,7 @@ public struct ForecastAPI: APIEndpoint {
     public var path: String = "/forecast"
 
     public func get(_ param: GetParam) async throws -> Forecast {
-        try await apiClient.response(method: .get, path: path, parameters: param)
+        try await apiClient.response(path: path, parameters: param)
     }
 }
 
