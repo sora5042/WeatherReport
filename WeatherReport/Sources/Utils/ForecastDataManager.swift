@@ -50,7 +50,6 @@ final class ForecastDataManager {
         } catch {}
     }
 
-    @MainActor
     func fetchCachedForecast(cityName: String) -> Forecast? {
         let currentDate = Date()
 
@@ -58,10 +57,10 @@ final class ForecastDataManager {
             $0.cityName == cityName && $0.expirationDate > currentDate
         }
 
-        let descriptor = FetchDescriptor(
-            predicate: predicate,
-            sortBy: [SortDescriptor(\.expirationDate, order: .reverse)]
-        )
+        var descriptor = FetchDescriptor<ForecastEntity>()
+        descriptor.predicate = predicate
+        descriptor.sortBy = [SortDescriptor(\ForecastEntity.expirationDate, order: .reverse)]
+        descriptor.relationshipKeyPathsForPrefetching = [\ForecastEntity.weathers]
 
         guard let entity = try? context.fetch(descriptor).first else {
             return nil

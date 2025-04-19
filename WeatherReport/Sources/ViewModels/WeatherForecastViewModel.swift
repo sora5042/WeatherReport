@@ -10,6 +10,7 @@ import Foundation
 @MainActor
 final class WeatherForecastViewModel: ObservableObject {
     private let forecastService: ForecastService
+    private let forecastDataManager: ForecastDataManager
     private var city: Forecast.City
 
     @Published
@@ -28,10 +29,12 @@ final class WeatherForecastViewModel: ObservableObject {
 
     init(
         city: Forecast.City,
-        forecastService: ForecastService = .default
+        forecastService: ForecastService = .default,
+        forecastDataManager: ForecastDataManager = .shared
     ) {
         self.city = city
         self.forecastService = forecastService
+        self.forecastDataManager = forecastDataManager
     }
 
     func fetchForecast() async {
@@ -39,7 +42,7 @@ final class WeatherForecastViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            if let cachedForecast = ForecastDataManager.shared.fetchCachedForecast(cityName: city.name ?? "") {
+            if let cachedForecast = forecastDataManager.fetchCachedForecast(cityName: city.name ?? "") {
                 row = .init(forecast: cachedForecast)
                 isLoading = false
                 return

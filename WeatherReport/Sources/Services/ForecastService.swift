@@ -84,7 +84,7 @@ extension Forecast.Weather {
 extension ForecastEntity {
     convenience init(forecast: Forecast, city: Forecast.City) {
         let weatherEntities = forecast.weather.map {
-            WeatherEntity(
+            let weather = WeatherEntity(
                 date: $0.date,
                 temperature: $0.temperature,
                 maxTemperature: $0.maxTemperature,
@@ -97,6 +97,7 @@ extension ForecastEntity {
                 pop: $0.pop,
                 pod: $0.pod
             )
+            return weather
         }
 
         self.init(

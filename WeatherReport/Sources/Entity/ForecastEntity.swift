@@ -52,7 +52,7 @@ final class WeatherEntity {
     var precipitation: Double
     var pod: String
 
-    @Relationship(inverse: \ForecastEntity.weathers)
+    @Relationship(deleteRule: .cascade, inverse: \ForecastEntity.weathers)
     var forecast: ForecastEntity?
 
     init(
