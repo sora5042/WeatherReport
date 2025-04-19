@@ -28,7 +28,9 @@ final class HomeViewModel: ObservableObject {
         dataStore: SecuredDataStore = SharedData.shared
     ) {
         self.dataStore = dataStore
-        dataStore.apiKey = "afd634bbf1c76e0a9b43c2f330fb04ac"
+        if dataStore.apiKey == nil || dataStore.apiKey?.isEmpty == true {
+            dataStore.apiKey = "afd634bbf1c76e0a9b43c2f330fb04ac"
+        }
 
         locationManager.$currentLocation
             .receive(on: DispatchQueue.main)
