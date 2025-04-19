@@ -36,7 +36,9 @@ final class ForecastDataManager {
 
         do {
             try context.save()
-        } catch {}
+        } catch {
+            print("保存エラー: \(error)")
+        }
     }
 
     @MainActor
@@ -47,7 +49,9 @@ final class ForecastDataManager {
         do {
             let results = try context.fetch(descriptor)
             results.forEach { context.delete($0) }
-        } catch {}
+        } catch {
+            print("削除エラー: \(error)")
+        }
     }
 
     func fetchCachedForecast(cityName: String) -> Forecast? {
@@ -59,8 +63,6 @@ final class ForecastDataManager {
 
         var descriptor = FetchDescriptor<ForecastEntity>()
         descriptor.predicate = predicate
-        descriptor.sortBy = [SortDescriptor(\ForecastEntity.expirationDate, order: .reverse)]
-        descriptor.relationshipKeyPathsForPrefetching = [\ForecastEntity.weathers]
 
         guard let entity = try? context.fetch(descriptor).first else {
             return nil

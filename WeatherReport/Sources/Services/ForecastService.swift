@@ -113,7 +113,7 @@ extension ForecastEntity {
 extension Forecast {
     init(entity: ForecastEntity) {
         self.init(
-            weather: entity.weathers.map(Weather.init),
+            weather: entity.weathers.map(Weather.init).sorted(by: { $0.date < $1.date }),
             city: .current(lat: entity.lat, lon: entity.lon),
             displayCityName: entity.displayCityName,
             lat: entity.lat,
@@ -124,11 +124,8 @@ extension Forecast {
 
 extension Forecast.Weather {
     init(entity: WeatherEntity) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-
         self.init(
-            date: formatter.string(from: entity.timestamp),
+            date: entity.date,
             temperature: entity.temperature,
             maxTemperature: entity.maxTemperature,
             minTemperature: entity.minTemperature,

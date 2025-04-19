@@ -29,18 +29,22 @@ final class ForecastEntity {
     }
 
     private static func generateIdentifier(city: Forecast.City, lat: Double, lon: Double) -> String {
+        let latStr = String(format: "%.6f", lat)
+        let lonStr = String(format: "%.6f", lon)
+
         switch city {
         case .current:
-            return "current_\(lat.formatted(.number))_\(lon.formatted(.number))"
+            return "current_\(latStr)_\(lonStr)"
         default:
-            return "\(city.name?.lowercased() ?? "")_\(lat.formatted(.number))_\(lon.formatted(.number))"
+            let cityName = city.name?.lowercased() ?? "unknown"
+            return "\(cityName)_\(latStr)_\(lonStr)"
         }
     }
 }
 
 @Model
 final class WeatherEntity {
-    @Attribute(.unique) var timestamp: Date
+    var date: String
     var temperature: Double
     var maxTemperature: Double
     var minTemperature: Double
@@ -68,9 +72,7 @@ final class WeatherEntity {
         pop: Double,
         pod: String
     ) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        timestamp = formatter.date(from: date) ?? Date()
+        self.date = date
         self.temperature = temperature
         self.maxTemperature = maxTemperature
         self.minTemperature = minTemperature
