@@ -63,10 +63,10 @@ final class WeatherForecastViewModel: ObservableObject {
 extension WeatherForecastViewModel {
     struct Row: Hashable {
         struct Weather: Hashable {
-            var temperature: Double
-            var maxTemperature: Double
-            var minTemperature: Double
-            var pop: Double
+            var temperature: Int
+            var maxTemperature: Int
+            var minTemperature: Int
+            var pop: Int
             var description: String
             var iconURL: URL?
             var date: String
@@ -97,13 +97,26 @@ extension WeatherForecastViewModel.Row {
 extension WeatherForecastViewModel.Row.Weather {
     init(weather: Forecast.Weather) {
         self.init(
-            temperature: weather.temperature,
-            maxTemperature: weather.maxTemperature,
-            minTemperature: weather.minTemperature,
-            pop: weather.pop,
+            temperature: Int(weather.temperature),
+            maxTemperature: Int(weather.maxTemperature),
+            minTemperature: Int(weather.minTemperature),
+            pop: Int(weather.pop * 100),
             description: weather.description,
             iconURL: .init(string: "https://openweathermap.org/img/wn/\(weather.weatherIcon)@2x.png"),
-            date: weather.date
+            date: weather.date.convertDateFormat(inputFormat: "yyyy-MM-dd HH:mm:ss", outputFormat: "MM月dd日 HH:mm") ?? ""
         )
+    }
+}
+
+extension Array where Element == WeatherForecastViewModel.Row.Weather {
+    /// "MM月dd日"ごとにグループ化
+    func groupedByDay() -> [(date: String, weathers: [Element])] {
+        let groups = Dictionary(grouping: self) { weather in
+            weather.date.components(separatedBy: " ").first ?? weather.date
+        }
+        // 日付順にソート
+        return groups
+            .map { key, value in (date: key, weathers: value) }
+            .sorted { $0.date < $1.date }
     }
 }

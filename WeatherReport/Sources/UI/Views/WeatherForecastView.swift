@@ -59,27 +59,43 @@ private struct ForecastList: View {
     var row: WeatherForecastViewModel.Row
 
     var body: some View {
-        ScrollView {
-            ForEach(row.weather, id: \.self) { weather in
-                Row(
-                    temperature: weather.temperature,
-                    maxTemperature: weather.maxTemperature,
-                    minTemperature: weather.minTemperature,
-                    pop: weather.pop,
-                    description: weather.description,
-                    iconURL: weather.iconURL,
-                    date: weather.date
-                )
+        List {
+            ForEach(row.weather.groupedByDay(), id: \.date) { section in
+                Section(header:
+                    HStack {
+                        Spacer()
+                        Text(section.date)
+                            .font(.headline)
+                            .foregroundStyle(.black)
+                        Spacer()
+                    }
+                ) {
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(section.weathers, id: \.self) { weather in
+                                Row(
+                                    temperature: weather.temperature,
+                                    maxTemperature: weather.maxTemperature,
+                                    minTemperature: weather.minTemperature,
+                                    pop: weather.pop,
+                                    description: weather.description,
+                                    iconURL: weather.iconURL,
+                                    date: weather.date.components(separatedBy: " ").last ?? weather.date
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 private struct Row: View {
-    var temperature: Double
-    var maxTemperature: Double
-    var minTemperature: Double
-    var pop: Double
+    var temperature: Int
+    var maxTemperature: Int
+    var minTemperature: Int
+    var pop: Int
     var description: String
     var iconURL: URL?
     var date: String
@@ -110,9 +126,9 @@ private struct Row: View {
                     Text(description)
                 }
                 VStack(spacing: 10) {
-                    Text("最高: \(Int(maxTemperature))℃")
-                    Text("最低: \(Int(minTemperature))℃")
-                    Text("降水率: \(Int(pop * 100))%")
+                    Text("最高: \(maxTemperature)℃")
+                    Text("最低: \(minTemperature)℃")
+                    Text("降水確率: \(pop)%")
                 }
                 Spacer()
             }
