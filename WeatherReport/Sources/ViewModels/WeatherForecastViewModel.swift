@@ -73,6 +73,8 @@ extension WeatherForecastViewModel {
         }
 
         var cityName: String
+        var lat: Double
+        var lon: Double
         var weather: [Weather]
     }
 
@@ -85,6 +87,8 @@ extension WeatherForecastViewModel.Row {
     init(forecast: Forecast) {
         self.init(
             cityName: forecast.displayCityName,
+            lat: forecast.lat,
+            lon: forecast.lon,
             weather: forecast.weather.map { .init(weather: $0) }
         )
     }

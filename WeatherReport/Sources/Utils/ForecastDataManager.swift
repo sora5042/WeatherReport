@@ -8,7 +8,12 @@
 import Foundation
 import SwiftData
 
-final class ForecastDataManager {
+protocol ForecastDataManaging {
+    func saveForecast(_ forecast: Forecast, city: Forecast.City) async
+    func fetchCachedForecast(cityName: String) -> Forecast?
+}
+
+final class ForecastDataManager: ForecastDataManaging {
     static let shared = ForecastDataManager()
 
     let container: ModelContainer
