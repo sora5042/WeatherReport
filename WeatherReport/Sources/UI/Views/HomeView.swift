@@ -17,7 +17,7 @@ struct HomeView: View {
                 .font(.title2)
                 .padding(.bottom, 16)
             CityList { city in
-                viewModel.selectedCity(city)
+                await viewModel.selectedCity(city)
             }
             Spacer()
         }
@@ -32,17 +32,32 @@ struct HomeView: View {
                 WeatherForecastView(viewModel: .init(city: city))
             }
         }
+        .alert(
+            "位置情報の利用が許可されていません",
+            isPresented: $viewModel.alert.denied
+        ) {
+            Button("設定を開く") {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            }
+            Button("キャンセル") {}
+        } message: {
+            Text("設定アプリで位置情報の利用を許可してください。")
+        }
     }
 }
 
 private struct CityList: View {
-    var selectCityAction: @MainActor (Forecast.City) -> Void
+    var selectCityAction: @MainActor (Forecast.City) async -> Void
 
     var body: some View {
         LazyVGrid(columns: columns, spacing: 20) {
             ForEach(Forecast.City.allCases, id: \.self) { city in
                 Button {
-                    selectCityAction(city)
+                    Task {
+                        await selectCityAction(city)
+                    }
                 } label: {
                     Text(title(city))
                         .font(.title3)

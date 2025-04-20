@@ -18,6 +18,9 @@ final class HomeViewModel: ObservableObject {
     var navigation: Navigation?
 
     @Published
+    var alert: Alert = .init()
+
+    @Published
     var error: Error?
 
     private var currentLocation: CLLocation?
@@ -40,12 +43,26 @@ final class HomeViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    func selectedCity(_ city: Forecast.City) {
-        var city = city
-        if city == .current(lat: 0, lon: 0) {
-            city = .current(lat: currentLocation?.coordinate.latitude ?? 0, lon: currentLocation?.coordinate.longitude ?? 0)
+    func selectedCity(_ city: Forecast.City) async {
+        switch locationManager.authorizationStatus {
+        case .notDetermined:
+            await fetchCurrentLocation()
+            return
+        case .denied, .restricted:
+            alert.denied = true
+            return
+        case .authorizedWhenInUse, .authorizedAlways:
+            var city = city
+            if city == .current(lat: 0, lon: 0) {
+                city = .current(
+                    lat: currentLocation?.coordinate.latitude ?? 0,
+                    lon: currentLocation?.coordinate.longitude ?? 0
+                )
+            }
+            navigation = .weatherForecast(city)
+        @unknown default:
+            fatalError(#function)
         }
-        navigation = .weatherForecast(city)
     }
 
     func fetchCurrentLocation() async {
@@ -66,5 +83,9 @@ final class HomeViewModel: ObservableObject {
 extension HomeViewModel {
     enum Navigation: Hashable {
         case weatherForecast(Forecast.City)
+    }
+
+    struct Alert: Hashable {
+        var denied: Bool = false
     }
 }
