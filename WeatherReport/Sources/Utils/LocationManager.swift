@@ -32,8 +32,14 @@ final class LocationManager: NSObject, ObservableObject {
             guard let location = update.location else { continue }
             currentLocation = location
 
-            if update.stationary {
-                break
+            if #available(iOS 18, *) {
+                if update.stationary {
+                    break
+                }
+            } else if #available(iOS 17, *) {
+                if update.isStationary {
+                    break
+                }
             }
         }
     }
