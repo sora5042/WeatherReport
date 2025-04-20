@@ -93,7 +93,7 @@ extension Forecast {
                     windDeg: 180,
                     pop: 0.0,
                     pod: "d"
-                )
+                ),
             ],
             displayCityName: "大阪市",
             lat: lat,

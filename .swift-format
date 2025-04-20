@@ -1,3 +1,4 @@
---disable andOperator,extensionAccessControl,hoistPatternLet,redundantVoidReturnType,strongOutlets,trailingCommas,unusedArguments
+--disable andOperator,extensionAccessControl,hoistPatternLet,redundantVoidReturnType,strongOutlets,trailingCommas,unusedArguments,trailingCommas
 --ifdef no-indent
 --ranges no-space
+--commas inline
